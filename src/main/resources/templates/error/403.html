@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>페이지에 접근할 수 없습니다</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        text-align: center;
+    }
+    h1 {
+        font-size: 3em;
+        margin-bottom: 0.5em;
+    }
+    p {
+        font-size: 1.2em;
+        margin-bottom: 1em;
+    }
+    a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        padding: 0.5em 1em;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        margin-top: 1em;
+    }
+    a:hover {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>403 - 페이지에 접근할 수 없습니다</h1>
+        <p>죄송합니다. 이 페이지에 접근할 권한이 없습니다.</p>
+        <a th:href="@{/main}">메인으로 이동</a>
+    </div>
+</body>
+</html>

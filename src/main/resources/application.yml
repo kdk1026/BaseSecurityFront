@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: BaseSecurityFront
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    cache: false
+  profiles:
+    active:
+    - local
+    
+tomcat:
+  ajp:
+    protocol: AJP/1.3
+    enabled: true
+    
+server:
+  error:
+    whitelabel:
+      enabled: false
+  # 시큐리티 적용 안됨
+  #servlet:
+    #session:
+      #timeout: 20m
+      
+security:
+  session:
+    timeout: 1200

@@ -1,0 +1,23 @@
+server:
+   port: 8080
+
+tomcat:
+   ajp:
+      port: 8009
+      
+# Metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  endpoint:
+    health:
+      show-details: "always"
+
+upload:
+  folder: "file:/D:/upload/"
