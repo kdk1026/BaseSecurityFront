@@ -3,11 +3,14 @@ package com.kdk.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 import com.kdk.app.common.security.service.UserDetailsServiceImpl;
 import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
@@ -68,6 +71,13 @@ public class SecurityConfig {
 							.maxSessionsPreventsLogin(true)
 							.expiredUrl("/login")
 					)
+			)
+			.headers((headers) ->
+				headers
+					.httpStrictTransportSecurity(this.hstsCustomizer())
+					.frameOptions(this.frameOptionsCustomizer())
+					.xssProtection(this.xssCustomizer())
+
 			);
 
 		return http.build();
@@ -90,6 +100,20 @@ public class SecurityConfig {
 			}
 
 		};
+	}
+
+	private Customizer<HeadersConfigurer<HttpSecurity>.HstsConfig> hstsCustomizer() {
+		return hsts -> hsts
+				.includeSubDomains(true)
+				.maxAgeInSeconds(31536000); // 1년
+	}
+
+	private Customizer<HeadersConfigurer<HttpSecurity>.FrameOptionsConfig> frameOptionsCustomizer() {
+		return frameOptions -> frameOptions.deny();
+	}
+
+	private Customizer<HeadersConfigurer<HttpSecurity>.XXssConfig> xssCustomizer() {
+		return xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED);
 	}
 
 }
