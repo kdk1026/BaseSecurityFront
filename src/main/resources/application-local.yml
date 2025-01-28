@@ -17,7 +17,7 @@ management:
         enabled: true
   endpoint:
     health:
-      show-details: "always"
+      show-details: always
 
 upload:
-  folder: "file:/D:/upload/"
+  folder: file:/D:/upload/
