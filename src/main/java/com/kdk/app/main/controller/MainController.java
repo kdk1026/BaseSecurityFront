@@ -1,5 +1,6 @@
 package com.kdk.app.main.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -28,17 +29,15 @@ public class MainController {
 
 		String sUsernam = authentication.getName();
 
-		StringBuilder sb = new StringBuilder();
-
 		@SuppressWarnings("unchecked")
 		List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
-
-		for ( GrantedAuthority authority : authorities ) {
-			sb.append(authority.getAuthority()).append(" ");
+		List<String> roles = new ArrayList<>();
+		for ( GrantedAuthority authoritiy : authorities ) {
+			roles.add(authoritiy.getAuthority());
 		}
 
 		mav.addObject("username", sUsernam);
-		mav.addObject("roles", sb.toString().trim());
+		mav.addObject("roles", roles);
 
 		mav.setViewName("main/main");
 		return mav;
