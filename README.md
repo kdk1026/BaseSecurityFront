@@ -1,3 +1,1 @@
-# Spring Security + Thymeleaf 예제
-
-### Thymeleaf Layout
+# Spring Security + Thymeleaf + Thymeleaf Layout 예제
