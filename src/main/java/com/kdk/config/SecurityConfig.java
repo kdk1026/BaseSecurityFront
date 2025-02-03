@@ -55,7 +55,7 @@ public class SecurityConfig {
 				formLogin
 					.loginPage("/login")
 					.permitAll()
-					.failureUrl("/login?error=true")
+					.failureUrl("/login?error")
 					.defaultSuccessUrl("/main", true)
 			)
 			.logout((logout) ->
@@ -69,7 +69,7 @@ public class SecurityConfig {
 					.sessionConcurrency((sessionConcurrency) ->
 						sessionConcurrency
 							.maximumSessions(1)
-							.maxSessionsPreventsLogin(true)
+							.maxSessionsPreventsLogin(false)
 							.expiredUrl("/login")
 					)
 			)
