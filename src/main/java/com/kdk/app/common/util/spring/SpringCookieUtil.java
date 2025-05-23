@@ -63,7 +63,7 @@ public class SpringCookieUtil {
 				.maxAge(maxAge)
 				.secure(isSecure)
 				.httpOnly(isHttpOnly)
-				.domain( StringUtils.hasLength(domain.trim()) ? domain : null )
+				.domain( StringUtils.hasText(domain) ? domain : null )
 				.build();
 
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
