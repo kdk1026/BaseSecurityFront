@@ -1,19 +1,19 @@
 package com.kdk.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
+import com.kdk.app.common.component.SpringBootProperty;
 import com.kdk.app.common.security.service.UserDetailsServiceImpl;
-import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
 
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
@@ -35,13 +35,18 @@ import jakarta.servlet.http.HttpSessionListener;
 public class SecurityConfig {
 
 	@SuppressWarnings("unused")
-	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
+	private SpringBootProperty springBootProperty;
+
+	public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl, SpringBootProperty springBootProperty) {
+		this.userDetailsServiceImpl = userDetailsServiceImpl;
+		this.springBootProperty = springBootProperty;
+	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.authorizeHttpRequests((authorizeHttpRequests) ->
+			.authorizeHttpRequests(authorizeHttpRequests ->
 				authorizeHttpRequests
 					.requestMatchers("/").permitAll()
 					.requestMatchers("/admin/**").hasRole("ADMIN")
@@ -51,29 +56,29 @@ public class SecurityConfig {
 					.requestMatchers("/actuator/**").permitAll()
 					.anyRequest().authenticated()
 			)
-			.formLogin((formLogin) ->
+			.formLogin(formLogin ->
 				formLogin
 					.loginPage("/login")
 					.permitAll()
 					.failureUrl("/login?error")
 					.defaultSuccessUrl("/main", true)
 			)
-			.logout((logout) ->
+			.logout(logout ->
 				logout
 					.logoutUrl("/logout")
 					.invalidateHttpSession(true)
 					.logoutSuccessUrl("/login")
 			)
-			.sessionManagement((sessionManagement) ->
+			.sessionManagement(sessionManagement ->
 				sessionManagement
-					.sessionConcurrency((sessionConcurrency) ->
+					.sessionConcurrency(sessionConcurrency ->
 						sessionConcurrency
 							.maximumSessions(1)
 							.maxSessionsPreventsLogin(false)
 							.expiredUrl("/login")
 					)
 			)
-			.headers((headers) ->
+			.headers(headers ->
 				headers
 					.httpStrictTransportSecurity(this.hstsCustomizer())
 					.frameOptions(this.frameOptionsCustomizer())
@@ -96,7 +101,7 @@ public class SecurityConfig {
 
 			@Override
 			public void sessionCreated(HttpSessionEvent se) {
-				String sSecuritySessionTimeout = SpringBootPropertyUtil.getProperty("security.session.timeout");
+				String sSecuritySessionTimeout = springBootProperty.getProperty("security.session.timeout");
 				se.getSession().setMaxInactiveInterval( Integer.parseInt(sSecuritySessionTimeout) );
 			}
 
@@ -110,7 +115,7 @@ public class SecurityConfig {
 	}
 
 	private Customizer<HeadersConfigurer<HttpSecurity>.FrameOptionsConfig> frameOptionsCustomizer() {
-		return frameOptions -> frameOptions.deny();
+		return FrameOptionsConfig::deny;
 	}
 
 	private Customizer<HeadersConfigurer<HttpSecurity>.XXssConfig> xssCustomizer() {

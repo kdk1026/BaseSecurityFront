@@ -2,7 +2,6 @@ package com.kdk.app.common.error;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -25,10 +24,13 @@ import org.springframework.web.context.request.WebRequest;
 @Controller
 public class CustomErrorController implements ErrorController {
 
-	@Autowired
 	private ErrorAttributes errorAttributes;
 
-    @GetMapping("/error")
+    public CustomErrorController(ErrorAttributes errorAttributes) {
+		this.errorAttributes = errorAttributes;
+	}
+
+	@GetMapping("/error")
     public String handlError(WebRequest webRequest, Model model) {
     	Map<String, Object> errors = errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
     	model.addAttribute("errors", errors);

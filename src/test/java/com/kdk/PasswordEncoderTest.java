@@ -1,5 +1,7 @@
 package com.kdk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -14,16 +16,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  *
  * @author kdk
  */
-public class PasswordEncoderTest {
+class PasswordEncoderTest {
 
 	@Test
-	public void test() {
+	void test() {
 		String sRawPassword = "qwer1234";
 
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		String sEncodedPassword = bCryptPasswordEncoder.encode(sRawPassword);
 
 		System.out.println(sEncodedPassword);
+		assertEquals(true, bCryptPasswordEncoder.matches(sRawPassword, sEncodedPassword));
 	}
 
 }

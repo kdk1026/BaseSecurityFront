@@ -183,6 +183,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
     */
 
+    @ExceptionHandler(RuntimeException.class)
+    public ModelAndView handleRuntimeException(RuntimeException e) {
+    	log.error("", e);
+
+    	String sResponseMessage = "Oops! Something went wrong on our end. We're working on it.";
+
+    	ModelAndView mav = new ModelAndView();
+		mav.addObject("message", sResponseMessage);
+		mav.setViewName("error/exception");
+		return mav;
+    }
+
     @ExceptionHandler(Exception.class)
     public ModelAndView handleException(Exception e) {
     	log.error("", e);

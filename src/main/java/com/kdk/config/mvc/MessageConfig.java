@@ -36,8 +36,7 @@ public class MessageConfig {
 
     @Bean
     CookieLocaleResolver localeResolver() {
-		CookieLocaleResolver localeResolver = new CookieLocaleResolver("lang");
-		return localeResolver;
+		return new CookieLocaleResolver("lang");
 	}
 
 }
