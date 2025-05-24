@@ -35,8 +35,8 @@ import jakarta.servlet.http.HttpSessionListener;
 public class SecurityConfig {
 
 	@SuppressWarnings("unused")
-	private UserDetailsServiceImpl userDetailsServiceImpl;
-	private SpringBootProperty springBootProperty;
+	private final UserDetailsServiceImpl userDetailsServiceImpl;
+	private final SpringBootProperty springBootProperty;
 
 	public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl, SpringBootProperty springBootProperty) {
 		this.userDetailsServiceImpl = userDetailsServiceImpl;

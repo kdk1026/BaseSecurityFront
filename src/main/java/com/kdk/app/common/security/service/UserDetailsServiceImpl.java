@@ -28,7 +28,7 @@ import com.kdk.app.login.vo.UserVo;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	private LoginService loginService;
+	private final LoginService loginService;
 
 	public UserDetailsServiceImpl(LoginService loginService) {
 		this.loginService = loginService;
