@@ -36,6 +36,7 @@
  * @property {object} CommonJS.Scroll - 2022.02.10 추가
  * @property {object} CommonJS.Masking - 2022.08.12 추가
  * @property {object} CommonJS.Time - 2022.08.23 추가
+ * @property {object} CommonJS.Url - 2025.02.19 추가
  * @property {method} prototype
  */
 var CommonJS = {
@@ -326,6 +327,34 @@ CommonJS.Text = {
         }
         str = str.length >= padLen ? str.substring(0, padLen) : str;
         return str;
+    },
+    /**
+     * 모던한 방법으로 클립보드 복사하기
+     * @param {string} string
+     * @param {undefined|null|string} title
+     * @param {undefined|null|string} text
+     * @returns
+     * @example
+     * CommonJS.Text.copyToClipBoard(window.location.href);
+     */
+    copyToClipBoardMorden: function (string, title, text) {
+        const currentURL = window.location.href;
+        if ( !currentURL.startsWith('https://') && !currentURL.includes('localhost') && !currentURL.includes('127.0.0.1') ) {
+            alert('URL은 localhost, 127.0.0.1 또는 HTTPS여야 합니다.');
+            return;
+        }
+
+        let clipboardContent = string;
+        if (title) clipboardContent = `${title}\n${clipboardContent}`;
+        if (text) clipboardContent = `${text}\n${clipboardContent}`;
+
+        navigator.clipboard.writeText(clipboardContent)
+        .then(() => {
+            alert('클립보드에 복사되었습니다.');
+        })
+        .catch((error) => {
+            alert('클립보드 복사 중 오류 발생: ' + error);
+        });
     }
 },
 
@@ -459,7 +488,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEmptyObject(val);
      */
     isEmptyObject: function (param) {
-        return Object.keys(param).length === 0 && param.constructor === Object;
+        //return Object.keys(param).length === 0 && param.constructor === Object;
+        return Object.keys(param).length === 0;
     },
     /**
      * Array가 비어있는지 체크
@@ -469,7 +499,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEmptyArray(val);
      */
     isEmptyArray: function (param) {
-        return Object.keys(param).length === 0 && param.constructor === Array;
+        //return Object.keys(param).length === 0 && param.constructor === Array;
+        return Array.isArray(param) && param.length === 0;
     }
 }
 
@@ -864,7 +895,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.jsonToObject(jsonStr);
      */
     jsonToObject: function (jsonStr) {
-        return JSON.parse(jsonStr);
+        try {
+            return JSON.parse(jsonStr);
+        } catch (error) {
+            console.error("JSON 파싱 실패:", error);
+        }
     },
     /**
      * Object를 JSON String으로 변환
@@ -874,7 +909,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.objectToJsonString(obj);
      */
     objectToJsonString: function (obj) {
-        return JSON.stringify(obj);
+        try {
+            return JSON.stringify(obj);
+        } catch (error) {
+            console.error("JSON 문자열 변환 실패:", error);
+        }
     },
     /**
      * Object를 Tree 구조의 JSON String으로 변환
@@ -884,7 +923,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.objectToJsonStringPretty(obj);
      */
     objectToJsonStringPretty: function (obj) {
-        return JSON.stringify(obj, null, 2);
+        try {
+            return JSON.stringify(obj, null, 2);
+        } catch (error) {
+            console.error("JSON 문자열 변환 실패:", error);
+        }
     }
 }
 
@@ -1814,6 +1857,37 @@ CommonJS.BrowserInfo = {
         }
     },
     /**
+     * 모바일 브라우저 여부 체크 (브라우저 모바일 모드도 모바일로 인식)
+     * @returns {boolean}
+     * @example
+     * CommonJS.BrowserInfo.isUserAgentMobile();
+     */
+    isUserAgentMobile: function () {
+        const userAgent = navigator.userAgent || window.opera;
+
+        if (/android/i.test(userAgent)) {
+            return true;
+        }
+
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            return true;
+        }
+
+        if (/blackberry|bb10|playbook/i.test(userAgent)) {
+            return true;
+        }
+
+        if (/windows phone/i.test(userAgent)) {
+            return true;
+        }
+
+        if (/webos|touchpad|hpwos/i.test(userAgent)) {
+            return true;
+        }
+
+        return false;
+    },
+    /**
      * Android, iOS 여부 체크
      * @returns {boolean}
      * @example
@@ -2690,6 +2764,7 @@ CommonJS.Mobile = {
      * @param {string} host
      * @param {string} scheme
      * @param {string} package
+     * @param {undefined|screen} screen
      * @returns
      * @example
      * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
@@ -2704,8 +2779,12 @@ CommonJS.Mobile = {
      *      <data android:host="호스트" android:scheme="스키마" />
      *  </intent-filter>
      */
-    makeAndroidAppLinkUrl: function (host, scheme, package) {
-        return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
+    makeAndroidAppLinkUrl: function (host, scheme, package, screen) {
+        if ( !screen ) {
+            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
+        } else {
+            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';S.screen=' + screen + ';end';
+        }
     },
     /**
      * IOS 앱링크 or 딥링크 URL 생성
@@ -2714,12 +2793,17 @@ CommonJS.Mobile = {
      *      2. Identifier와 URL Schemes에 적절한 값을 입력
      * @param {string} host
      * @param {string} scheme
+     * @param {undefined|screen} screen
      * @returns
      * @example
      * CommonJS.Mobile.makeURLSchemeIOSAppLinkUrl('instagram.com', 'https');
      */
-    makeURLSchemeIOSAppLinkUrl: function (host, scheme) {
-        return scheme + '://' + host;
+    makeURLSchemeIOSAppLinkUrl: function (host, scheme, screen) {
+        if ( !screen ) {
+            return scheme + '://' + host;
+        } else {
+            return scheme + '://' + host + '?screen=' + screen;
+        }
     },
     /**
      * 앱링크 or 딥링크 실행
@@ -4046,6 +4130,44 @@ CommonJS.Time = {
 
         const years = days / 365;
         return `${Math.floor(years)}년 전`
+    }
+}
+
+CommonJS.Url = {
+    /**
+     * URL 공유
+     * @param {undefined|null|string} title
+     * @param {undefined|null|string} text
+     * @returns
+     * @example
+     * CommonJS.Url.shareUrl();
+     */
+    shareUrl: function(title, text) {
+        const currentURL = window.location.href;
+        if ( !currentURL.startsWith('https://') && !currentURL.includes('localhost') && !currentURL.includes('127.0.0.1') ) {
+            alert('URL은 localhost, 127.0.0.1 또는 HTTPS여야 합니다.');
+            return;
+        }
+
+        if ( navigator.share ) {
+            navigator.share({
+                title: title || '',
+                text: text || '',
+                url: window.location.href
+            })
+            .then(() => {
+                console.log('콘텐츠가 성공적으로 공유되었습니다.');
+            })
+            .catch((error) => {
+                if (error.name === 'AbortError') {
+                    alert('사용자가 공유를 취소했습니다.');
+                } else {
+                    alert('콘텐츠 공유 중 오류 발생: ' + error);
+                }
+            });
+        } else {
+            alert('공유 API가 지원되지 않는 브라우저입니다.');
+        }
     }
 }
 
