@@ -5,8 +5,7 @@
     	String sResponseMessage = "An unexpected database error occurred. Please try again later.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -17,8 +16,7 @@
         String sResponseMessage = "A database error occurred due to incorrect SQL syntax. Please contact support.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -29,8 +27,7 @@
     	String sResponseMessage = "Data integrity violation occurred. Please check your data and try again.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -41,8 +38,7 @@
     	String sResponseMessage = "Duplicate key error occurred. Please ensure unique values for key fields.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -53,8 +49,7 @@
     	String sResponseMessage = "Database lock acquisition failed. Please try again later.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -65,7 +60,6 @@
     	String sResponseMessage = "A database deadlock occurred. Please try again later.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }

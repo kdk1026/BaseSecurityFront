@@ -27,13 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+	private void setModelAndView(ModelAndView mav, String message) {
+		mav.addObject("message", message);
+		mav.setViewName("error/exception");
+	}
+
 	@ExceptionHandler(ArithmeticException.class)
 	public ModelAndView handleArithmeticException(ArithmeticException e) {
 		log.error("", e);
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", e.getMessage());
-		mav.setViewName("error/exception");
+		setModelAndView(mav, e.getMessage());
 		return mav;
 	}
 
@@ -44,8 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     	String sResponseMessage = "Illegal Argument";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -56,8 +59,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     	String sResponseMessage = "File Access Denied";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -68,8 +70,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     	String sResponseMessage = "File Not Found";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -80,8 +81,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String sResponseMessage = "A null pointer exception occurred. Please check your data and try again.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -92,8 +92,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String sResponseMessage = "An I/O error occurred. Please try again later.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -104,8 +103,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String sResponseMessage = "A timeout error occurred. Please try again later.";
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -118,8 +116,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     	String sResponseMessage = "Oops! Something went wrong on our end. We're working on it.";
 
     	ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+    	setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
@@ -143,8 +140,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     	}
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("message", sResponseMessage);
-		mav.setViewName("error/exception");
+		setModelAndView(mav, sResponseMessage);
 		return mav;
     }
 
