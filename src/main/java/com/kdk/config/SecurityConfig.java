@@ -87,6 +87,10 @@ public class SecurityConfig {
 					.frameOptions(this.frameOptionsCustomizer())
 					.xssProtection(this.xssCustomizer())
 
+			)
+			.csrf(csrf ->
+				csrf
+					.ignoringRequestMatchers("/test/**")
 			);
 
 		return http.build();
