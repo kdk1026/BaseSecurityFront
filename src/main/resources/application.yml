@@ -19,10 +19,13 @@ server:
   error:
     whitelabel:
       enabled: false
-  # 시큐리티 적용 안됨
-  #servlet:
-    #session:
-      #timeout: 20m
+  servlet:
+    encoding:
+      charset: UTF-8 
+      enabled: true
+      force: true
+    session:
+      timeout: 20m  # 스프링 시큐리티에서 안되는 경우, Java 단에서 직접 설정
       
 security:
   session:
